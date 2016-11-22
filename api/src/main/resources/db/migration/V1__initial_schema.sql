@@ -95,6 +95,13 @@ CREATE FUNCTION claim_pending_entries(maxNumberOfEntries INTEGER) RETURNS SETOF 
     RETURNING *;
 $$ LANGUAGE sql;
 
-CREATE FUNCTION reset_claimed_entries() RETURNS VOID AS $$
-  UPDATE entry SET status = 'PENDING' WHERE status = 'ACTIVE';
-$$ LANGUAGE sql;
+CREATE FUNCTION reset_claimed_entries() RETURNS INTEGER AS $$
+DECLARE rows_affected INTEGER;
+BEGIN
+  WITH updated_rows AS (
+    UPDATE entry SET status = 'PENDING' WHERE status = 'ACTIVE' RETURNING id
+  )
+  SELECT count(id) from updated_rows INTO rows_affected;
+  RETURN rows_affected;
+END;
+$$ LANGUAGE plpgsql;
