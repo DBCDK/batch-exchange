@@ -43,6 +43,7 @@
     <dependency>
       <groupId>dk.dbc</groupId>
       <artifactId>dbc-commons-testutil-assert</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
