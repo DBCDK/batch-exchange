@@ -22,7 +22,7 @@ public class BatchEntryDiagnosticsConversion {
 
     public PGobject toDatabaseColumn(List<Diagnostic> diagnostics) {
         if (diagnostics == null) {
-            return null;
+            diagnostics = Collections.emptyList();
         }
         final PGobject pgObject = new PGobject();
         pgObject.setType("jsonb");

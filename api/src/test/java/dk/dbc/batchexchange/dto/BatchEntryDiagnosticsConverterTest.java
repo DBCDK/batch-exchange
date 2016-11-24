@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -22,8 +21,11 @@ public class BatchEntryDiagnosticsConverterTest {
     private final BatchEntryDiagnosticsConverter converter = new BatchEntryDiagnosticsConverter();
 
     @Test
-    public void convertToDatabaseColumn_diagnosticArgIsNull_returnsNull() {
-        assertThat(converter.convertToDatabaseColumn(null), is(nullValue()));
+    public void convertToDatabaseColumn_diagnosticArgIsNull_returnsEmptyJsonArray() {
+        final PGobject pgObject = converter.convertToDatabaseColumn(null);
+        assertThat("PGobject", pgObject, is(notNullValue()));
+        assertThat("PGobject type", pgObject.getType(), is("jsonb"));
+        assertThat("PGobject value", pgObject.getValue(), is("[]"));
     }
 
     @Test
