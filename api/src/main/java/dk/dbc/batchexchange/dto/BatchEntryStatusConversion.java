@@ -9,13 +9,13 @@ import org.postgresql.util.PGobject;
 
 import java.sql.SQLException;
 
-public class BatchStatusConversion {
-    public Object toDatabaseColumn(Batch.Status status) {
+public class BatchEntryStatusConversion {
+    public Object toDatabaseColumn(BatchEntry.Status status) {
         if (status == null) {
             throw new IllegalArgumentException("status can not be null");
         }
         final PGobject pgObject = new PGobject();
-        pgObject.setType("batch_status");
+        pgObject.setType("entry_status");
         try {
             pgObject.setValue(status.name());
         } catch (SQLException e) {
@@ -24,13 +24,16 @@ public class BatchStatusConversion {
         return pgObject;
     }
 
-    public Batch.Status toEntityAttribute(Object dbValue) {
+    public BatchEntry.Status toEntityAttribute(Object dbValue) {
         if (dbValue == null) {
             throw new IllegalArgumentException("dbValue can not be null");
         }
         switch ((String) dbValue) {
-            case "PENDING": return Batch.Status.PENDING;
-            case "COMPLETED": return Batch.Status.COMPLETED;
+            case "PENDING": return BatchEntry.Status.PENDING;
+            case "ACTIVE": return BatchEntry.Status.ACTIVE;
+            case "OK": return BatchEntry.Status.OK;
+            case "FAILED": return BatchEntry.Status.FAILED;
+            case "IGNORED": return BatchEntry.Status.IGNORED;
             default: return null;
         }
     }
