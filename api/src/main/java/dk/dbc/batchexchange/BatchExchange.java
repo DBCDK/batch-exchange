@@ -82,8 +82,10 @@ public class BatchExchange {
     public int resetClaimedBatchEntries(Connection conn) throws SQLException {
         try (PreparedStatement reset = conn.prepareStatement(BatchEntry.RESET_CLAIMED_ENTRIES_QUERY)) {
             final ResultSet rs = reset.executeQuery();
-            rs.next();
-            return rs.getInt(1);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
         }
     }
 }
