@@ -233,15 +233,15 @@ public class BatchExchangeOrmIT extends IntegrationTest {
             assertThat("batch entry ID", entry.getId(), is(id++));
             assertThat("batch entry status", entry.getStatus(), is(BatchEntry.Status.ACTIVE));
         }
-        assertThat("number of batch entries marked as ACTIVE", getNumberOfActiveBatchEntries(), is(10L));
+        assertThat("number of batch entries marked as ACTIVE", getNumberOfActiveBatchEntries(), is(10));
 
         final Integer numberOfReset = transaction_scoped(() -> (Integer) entityManager
                 .createNamedQuery(BatchEntry.RESET_CLAIMED_ENTRIES_QUERY_NAME)
                 .getSingleResult());
 
         assertThat("number of reset batch entries", numberOfReset, is(10));
-        assertThat("number of batch entries marked as ACTIVE after reset", getNumberOfActiveBatchEntries(), is(0L));
-        assertThat("number of batch entries marked as PENDING after reset", getNumberOfPendingBatchEntries(), is(30L));
+        assertThat("number of batch entries marked as ACTIVE after reset", getNumberOfActiveBatchEntries(), is(0));
+        assertThat("number of batch entries marked as PENDING after reset", getNumberOfPendingBatchEntries(), is(30));
     }
 
     /**
@@ -257,7 +257,7 @@ public class BatchExchangeOrmIT extends IntegrationTest {
             .setParameter(1, 1000)
             .getResultList());
 
-        // Then try to claim som more
+        // Then try to claim some more
         final List<BatchEntry> entries = transaction_scoped(() -> (List<BatchEntry>) entityManager
             .createNamedQuery(BatchEntry.CLAIM_PENDING_ENTRIES_QUERY_NAME)
             .setParameter(1, 10)
@@ -327,16 +327,6 @@ public class BatchExchangeOrmIT extends IntegrationTest {
         transaction_scoped(() -> batchEntry.withStatus(BatchEntry.Status.OK));
         assertThat(() -> transaction_scoped(() -> batchEntry.withStatus(BatchEntry.Status.ACTIVE)),
                 isThrowing(RollbackException.class));
-    }
-
-    private long getNumberOfActiveBatchEntries() {
-        return (long) entityManager.createNativeQuery("SELECT count(id) FROM entry WHERE status = 'ACTIVE'")
-                .getSingleResult();
-    }
-
-    private long getNumberOfPendingBatchEntries() {
-        return (long) entityManager.createNativeQuery("SELECT count(id) FROM entry WHERE status = 'PENDING'")
-                .getSingleResult();
     }
 
     private <T> T transaction_scoped(CodeBlockExecution<T> codeBlock) {

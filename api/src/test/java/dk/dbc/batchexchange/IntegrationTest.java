@@ -53,4 +53,20 @@ public class IntegrationTest {
             throw new IllegalStateException(e);
         }
     }
+
+    protected int getNumberOfActiveBatchEntries() {
+        try (Connection conn = datasource.getConnection()) {
+            return JDBCUtil.getFirstInt(conn, "SELECT count(id) FROM entry WHERE status = 'ACTIVE'");
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    protected int getNumberOfPendingBatchEntries() {
+        try (Connection conn = datasource.getConnection()) {
+            return JDBCUtil.getFirstInt(conn, "SELECT count(id) FROM entry WHERE status = 'PENDING'");
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 }
