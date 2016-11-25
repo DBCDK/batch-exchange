@@ -1,0 +1,43 @@
+Copyright Dansk Bibliotekscenter a/s. Licensed under GNU 3
+See license text in LICENSE.txt
+
+DBC batch-exchange
+
+Documentation
+-------------
+
+DBC batch-exchange provides a way for a producer system to hand over workloads in form of batches to a consumer system,
+while also allowing the consumer system to notify the producer about the state of the batch processing.
+
+The batch-exchange-api artifact offers a full ORM java API through the Batch and BatchEntry classes in the
+dk.dbc.batchexchange.dto package and a plain JDBC consumer oriented API through the dk.dbc.batchexchange.BatchExchange
+class.
+
+A project wishing to utilize the ORM API must provide a DataSource resource via JNDI name jdbc/batch-exchange and must
+include a persistence.xml file containing at least the following classes:
+
+    <class>dk.dbc.batchexchange.dto.BatchStatusConverter</class>
+    <class>dk.dbc.batchexchange.dto.Batch</class>
+    <class>dk.dbc.batchexchange.dto.BatchEntryDiagnosticsConverter</class>
+    <class>dk.dbc.batchexchange.dto.BatchEntryMetadataConverter</class>
+    <class>dk.dbc.batchexchange.dto.BatchEntryStatusConverter</class>
+    <class>dk.dbc.batchexchange.dto.BatchEntry</class>
+
+The batch-exchange database offers the following thread-safe functionality as stored procedures:
+
+* get_completed_batch() : returns the next completed batch, batch completion is handled by database triggers.
+
+* get_batch_entries(batchId INTEGER) : returns all entries belonging to the specified batch ordered by entry ID.
+
+* claim_pending_entries(maxNumberOfEntries INTEGER) : claims up to maxNumberOfEntries entries for processing and returns
+these.
+
+* reset_claimed_entries() : resets all previously claimed entries back to their PENDING state.
+
+CAVEATS:
+
+* Currently a batch and all its entries must be created in the same transaction or else the database triggers are not
+guaranteed to work properly.
+
+* The database trigger functionality can potentially deadlock if the consumer system updates entries from different
+batches in a different order in the same transaction in multiple threads.
