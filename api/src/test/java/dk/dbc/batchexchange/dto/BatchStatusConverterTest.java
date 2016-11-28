@@ -19,8 +19,11 @@ public class BatchStatusConverterTest {
     private final BatchStatusConverter converter = new BatchStatusConverter();
 
     @Test
-    public void convertToDatabaseColumn_statusArgIsNull_throws() {
-        assertThat(() -> converter.convertToDatabaseColumn(null), isThrowing(IllegalArgumentException.class));
+    public void convertToDatabaseColumn_statusArgIsNull_returnNullValue() {
+        final Object pgObject = converter.convertToDatabaseColumn(null);
+        assertThat("PGobject", pgObject, is(notNullValue()));
+        assertThat("PGobject type", ((PGobject) pgObject).getType(), is("batch_status"));
+        assertThat("PGobject value", ((PGobject) pgObject).getValue(), is(Batch.Status.PENDING.name()));
     }
 
     @Test

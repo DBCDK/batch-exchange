@@ -90,7 +90,6 @@ public class BatchExchangeOrmIT extends IntegrationTest {
     @Test
     public void batch_creation() {
         final Batch batch = new Batch()
-                .withStatus(Batch.Status.PENDING)
                 .withName("new_batch");
 
         transaction_scoped(() -> entityManager.persist(batch));
@@ -136,7 +135,6 @@ public class BatchExchangeOrmIT extends IntegrationTest {
 
         final BatchEntry batchEntry = new BatchEntry()
                 .withBatch(1)
-                .withStatus(BatchEntry.Status.ACTIVE)
                 .withMetadata(metadata)
                 .withContent(content.getBytes(StandardCharsets.UTF_8))
                 .withTrackingId(trackingId);
@@ -144,7 +142,7 @@ public class BatchExchangeOrmIT extends IntegrationTest {
         transaction_scoped(() -> entityManager.persist(batchEntry));
         entityManager.refresh(batchEntry);
 
-        assertThat("status", batchEntry.getStatus(), is(BatchEntry.Status.ACTIVE));
+        assertThat("status", batchEntry.getStatus(), is(BatchEntry.Status.PENDING));
         assertThat("content", batchEntry.getContent(), is(content.getBytes(StandardCharsets.UTF_8)));
         assertThat("metadata", batchEntry.getMetadata(), is(metadata));
         assertThat("trackingId", batchEntry.getTrackingId(), is(trackingId));
@@ -152,7 +150,7 @@ public class BatchExchangeOrmIT extends IntegrationTest {
         final Batch batch = entityManager.find(Batch.class, 1);
         assertThat("incompleteEntries", batch.getIncompleteEntries(), is(11));
 
-        transaction_scoped(() -> batchEntry.withStatus(BatchEntry.Status.PENDING));
+        transaction_scoped(() -> batchEntry.withStatus(BatchEntry.Status.ACTIVE));
         entityManager.refresh(batch);
 
         assertThat("incompleteEntries after status update", batch.getIncompleteEntries(), is(11));
@@ -167,19 +165,17 @@ public class BatchExchangeOrmIT extends IntegrationTest {
         final BatchEntry ignored = new BatchEntry()
                 .withBatch(1)
                 .withStatus(BatchEntry.Status.IGNORED)
-                .withMetadata("{}")
+                .withMetadata("")
                 .withContent("ignored".getBytes(StandardCharsets.UTF_8))
                 .withTrackingId("ignored");
         final BatchEntry ok = new BatchEntry()
                 .withBatch(1)
                 .withStatus(BatchEntry.Status.OK)
-                .withMetadata("{}")
                 .withContent("ok".getBytes(StandardCharsets.UTF_8))
                 .withTrackingId("ok");
         final BatchEntry failed = new BatchEntry()
                 .withBatch(1)
                 .withStatus(BatchEntry.Status.FAILED)
-                .withMetadata("{}")
                 .withContent("failed".getBytes(StandardCharsets.UTF_8))
                 .withTrackingId("failed");
 

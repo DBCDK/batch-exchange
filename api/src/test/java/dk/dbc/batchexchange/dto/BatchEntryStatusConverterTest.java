@@ -20,7 +20,10 @@ public class BatchEntryStatusConverterTest {
 
     @Test
     public void convertToDatabaseColumn_statusArgIsNull_throws() {
-        assertThat(() -> converter.convertToDatabaseColumn(null), isThrowing(IllegalArgumentException.class));
+        final Object pgObject = converter.convertToDatabaseColumn(null);
+        assertThat("PGobject", pgObject, is(notNullValue()));
+        assertThat("PGobject type", ((PGobject) pgObject).getType(), is("entry_status"));
+        assertThat("PGobject value", ((PGobject) pgObject).getValue(), is(BatchEntry.Status.PENDING.name()));
     }
 
     @Test

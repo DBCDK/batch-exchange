@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class BatchStatusConversion {
     public Object toDatabaseColumn(Batch.Status status) {
         if (status == null) {
-            throw new IllegalArgumentException("status can not be null");
+            status = Batch.Status.PENDING;
         }
         final PGobject pgObject = new PGobject();
         pgObject.setType("batch_status");

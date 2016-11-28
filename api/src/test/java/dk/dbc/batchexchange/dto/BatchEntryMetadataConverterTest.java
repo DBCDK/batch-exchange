@@ -19,14 +19,19 @@ public class BatchEntryMetadataConverterTest {
     private final BatchEntryMetadataConverter converter = new BatchEntryMetadataConverter();
 
     @Test
-    public void convertToDatabaseColumn_metadataArgIsNull_returnsNull() {
-        assertThat(converter.convertToDatabaseColumn(null), is(nullValue()));
+    public void convertToDatabaseColumn_metadataArgIsNull_returnsNullValue() {
+        final PGobject pgObject = converter.convertToDatabaseColumn(null);
+        assertThat("PGobject", pgObject, is(notNullValue()));
+        assertThat("PGobject type", pgObject.getType(), is("jsonb"));
+        assertThat("PGobject value", pgObject.getValue(), is(nullValue()));
     }
 
     @Test
-    public void convertToDatabaseColumn_metadataArgIsEmpty_returnsEmptyString() {
-        final PGobject pgObject = converter.convertToDatabaseColumn("");
-        assertThat("PGobject", pgObject, is(nullValue()));
+    public void convertToDatabaseColumn_metadataArgIsEmpty_returnsNullValue() {
+        final PGobject pgObject = converter.convertToDatabaseColumn(null);
+        assertThat("PGobject", pgObject, is(notNullValue()));
+        assertThat("PGobject type", pgObject.getType(), is("jsonb"));
+        assertThat("PGobject value", pgObject.getValue(), is(nullValue()));
     }
 
     @Test

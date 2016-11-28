@@ -11,8 +11,8 @@ import java.sql.SQLException;
 
 public class BatchEntryMetadataConversion {
     public PGobject toDatabaseColumn(String metadata) {
-        if (metadata == null || metadata.isEmpty()) {
-            return null;
+        if (metadata != null && metadata.trim().isEmpty()) {
+            metadata = null;
         }
         final PGobject pgObject = new PGobject();
         pgObject.setType("jsonb");
