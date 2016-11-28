@@ -22,6 +22,10 @@ public class Diagnostic {
         return new Diagnostic(Level.WARNING, message);
     }
 
+    public static Diagnostic createOk(String message) {
+        return new Diagnostic(Level.OK, message);
+    }
+
     @JsonCreator
     public Diagnostic(@JsonProperty("level") Level level,
                       @JsonProperty("message") String message) {
