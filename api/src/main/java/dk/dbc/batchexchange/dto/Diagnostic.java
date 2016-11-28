@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Diagnostic {
-    public enum Level { ERROR, WARNING }
+    public enum Level { ERROR, WARNING, OK }
 
     private final Level level;
     private final String message;
