@@ -24,6 +24,8 @@ public class BatchExchangeDatabaseMigrator {
     @Resource(lookup = "jdbc/batch-exchange")
     DataSource dataSource;
 
+    public BatchExchangeDatabaseMigrator() {}
+
     public BatchExchangeDatabaseMigrator(DataSource dataSource) {
         this.dataSource = dataSource;
     }
