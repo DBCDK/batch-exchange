@@ -195,9 +195,8 @@ public class BatchExchangeOrmIT extends IntegrationTest {
      */
     @Test
     public void gettingBatchEntries() {
-        @SuppressWarnings("unchecked")
-        final List<BatchEntry> entries = (List<BatchEntry>) entityManager
-                .createNamedQuery(BatchEntry.GET_BATCH_ENTRIES_QUERY_NAME)
+        final List<BatchEntry> entries = entityManager
+                .createNamedQuery(BatchEntry.GET_BATCH_ENTRIES_QUERY_NAME, BatchEntry.class)
                 .setParameter(1, 2)
                 .getResultList();
 
@@ -216,10 +215,9 @@ public class BatchExchangeOrmIT extends IntegrationTest {
      * Then: then claimed batch entries have their status set back to PENDING
      */
     @Test
-    @SuppressWarnings("unchecked")
     public void claimingBatchEntries() {
-        final List<BatchEntry> entries = transaction_scoped(() -> (List<BatchEntry>) entityManager
-            .createNamedQuery(BatchEntry.CLAIM_PENDING_ENTRIES_QUERY_NAME)
+        final List<BatchEntry> entries = transaction_scoped(() -> entityManager
+            .createNamedQuery(BatchEntry.CLAIM_PENDING_ENTRIES_QUERY_NAME, BatchEntry.class)
             .setParameter(1, 10)
             .getResultList());
 
@@ -245,7 +243,6 @@ public class BatchExchangeOrmIT extends IntegrationTest {
      * Then: no batch entries are claimed
      */
     @Test
-    @SuppressWarnings("unchecked")
     public void claimingPendingBatchEntries_whenNoneExist() {
         // First claim every batch entry
         transaction_scoped(() -> entityManager
@@ -254,8 +251,8 @@ public class BatchExchangeOrmIT extends IntegrationTest {
             .getResultList());
 
         // Then try to claim some more
-        final List<BatchEntry> entries = transaction_scoped(() -> (List<BatchEntry>) entityManager
-            .createNamedQuery(BatchEntry.CLAIM_PENDING_ENTRIES_QUERY_NAME)
+        final List<BatchEntry> entries = transaction_scoped(() -> entityManager
+            .createNamedQuery(BatchEntry.CLAIM_PENDING_ENTRIES_QUERY_NAME, BatchEntry.class)
             .setParameter(1, 10)
             .getResultList());
 
@@ -273,9 +270,8 @@ public class BatchExchangeOrmIT extends IntegrationTest {
      */
     @Test
     public void batchEntryStatusUpdatesCompleteBatch() {
-        @SuppressWarnings("unchecked")
-        final List<BatchEntry> entries = (List<BatchEntry>) entityManager
-                .createNamedQuery(BatchEntry.GET_BATCH_ENTRIES_QUERY_NAME)
+        final List<BatchEntry> entries = entityManager
+                .createNamedQuery(BatchEntry.GET_BATCH_ENTRIES_QUERY_NAME, BatchEntry.class)
                 .setParameter(1, 1)
                 .getResultList();
 
