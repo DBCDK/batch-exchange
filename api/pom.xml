@@ -79,7 +79,7 @@
             <phase>initialize</phase>
             <configuration>
               <maxPortNumber>65000</maxPortNumber>
-              <minPortNumber>60000</minPortNumber>
+              <minPortNumber>64000</minPortNumber>
               <portNames>
                 <portName>postgresql.port</portName>
               </portNames>
