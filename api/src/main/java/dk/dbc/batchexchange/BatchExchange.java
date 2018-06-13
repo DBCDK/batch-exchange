@@ -66,7 +66,8 @@ public class BatchExchange {
                         .withIsContinued(rs.getBoolean(7))
                         .withContent(rs.getBytes(8))
                         .withMetadata(batchEntryMetadataConversion.toEntityAttribute((PGobject) rs.getObject(9)))
-                        .withDiagnostics(batchEntryDiagnosticsConversion.toEntityAttribute((PGobject) rs.getObject(10)));
+                        .withDiagnostics(batchEntryDiagnosticsConversion.toEntityAttribute((PGobject) rs.getObject(10)))
+                        .withPriority(rs.getInt(11));
                 entries.add(entry);
             }
             return entries;
