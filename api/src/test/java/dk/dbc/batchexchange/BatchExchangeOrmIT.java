@@ -210,7 +210,8 @@ public class BatchExchangeOrmIT extends IntegrationTest {
     /**
      * When: claiming pending batch entries
      * Then: the claimed batch entries have their status set to ACTIVE
-     *  And: the claimed batch entries are returned ordered by ID
+     *  And: the claimed batch entries are returned ordered by
+     *       priority descending and ID ascending
      * When: resetting claimed batch entries
      * Then: then claimed batch entries have their status set back to PENDING
      */
@@ -222,11 +223,27 @@ public class BatchExchangeOrmIT extends IntegrationTest {
             .getResultList());
 
         assertThat("number of claimed batch entries", entries.size(), is(10));
-        int id = 1;
-        for (BatchEntry entry : entries) {
-            assertThat("batch entry ID", entry.getId(), is(id++));
-            assertThat("batch entry status", entry.getStatus(), is(BatchEntry.Status.ACTIVE));
-        }
+        assertThat("1st entry ID", entries.get(0).getId(), is(2));
+        assertThat("1st entry status", entries.get(0).getStatus(), is(BatchEntry.Status.ACTIVE));
+        assertThat("2nd entry ID", entries.get(1).getId(), is(4));
+        assertThat("2nd entry status", entries.get(1).getStatus(), is(BatchEntry.Status.ACTIVE));
+        assertThat("3rd entry ID", entries.get(2).getId(), is(6));
+        assertThat("3rd entry status", entries.get(2).getStatus(), is(BatchEntry.Status.ACTIVE));
+        assertThat("4th entry ID", entries.get(3).getId(), is(8));
+        assertThat("4th entry status", entries.get(3).getStatus(), is(BatchEntry.Status.ACTIVE));
+        assertThat("5th entry ID", entries.get(4).getId(), is(10));
+        assertThat("5th entry status", entries.get(4).getStatus(), is(BatchEntry.Status.ACTIVE));
+        assertThat("6th entry ID", entries.get(5).getId(), is(1));
+        assertThat("6th entry status", entries.get(5).getStatus(), is(BatchEntry.Status.ACTIVE));
+        assertThat("7th entry ID", entries.get(6).getId(), is(3));
+        assertThat("7th entry status", entries.get(6).getStatus(), is(BatchEntry.Status.ACTIVE));
+        assertThat("8th entry ID", entries.get(7).getId(), is(5));
+        assertThat("8th entry status", entries.get(7).getStatus(), is(BatchEntry.Status.ACTIVE));
+        assertThat("9th entry ID", entries.get(8).getId(), is(7));
+        assertThat("9th entry status", entries.get(8).getStatus(), is(BatchEntry.Status.ACTIVE));
+        assertThat("10th entry ID", entries.get(9).getId(), is(9));
+        assertThat("10th entry status", entries.get(9).getStatus(), is(BatchEntry.Status.ACTIVE));
+
         assertThat("number of batch entries marked as ACTIVE", getNumberOfActiveBatchEntries(), is(10));
 
         final Integer numberOfReset = transaction_scoped(() -> (Integer) entityManager

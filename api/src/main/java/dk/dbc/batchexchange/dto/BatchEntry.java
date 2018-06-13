@@ -43,7 +43,7 @@ public class BatchEntry {
     public static final String IMPLICIT_RESULT_SET_MAPPING = "BatchEntry.implicit";
     public static final String GET_BATCH_ENTRIES_QUERY = "SELECT * FROM get_batch_entries(?)";
     public static final String GET_BATCH_ENTRIES_QUERY_NAME = "get_batch_entries";
-    public static final String CLAIM_PENDING_ENTRIES_QUERY = "SELECT * FROM claim_pending_entries(?) ORDER BY id";
+    public static final String CLAIM_PENDING_ENTRIES_QUERY = "SELECT * FROM claim_pending_entries(?) ORDER BY priority DESC, id ASC";
     public static final String CLAIM_PENDING_ENTRIES_QUERY_NAME = "claim_pending_entries";
     public static final String RESET_CLAIMED_ENTRIES_QUERY = "SELECT * FROM reset_claimed_entries()";
     public static final String RESET_CLAIMED_ENTRIES_QUERY_NAME = "reset_claimed_entries";
