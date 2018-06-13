@@ -107,6 +107,7 @@ public class BatchExchangeOrmIT extends IntegrationTest {
      *  And: status is set to PENDING
      *  And: isContinued is set to false
      *  And: no diagnostics are set
+     *  And: priority is 4
      */
     @Test
     public void batchEntry_defaults() {
@@ -116,6 +117,7 @@ public class BatchExchangeOrmIT extends IntegrationTest {
         assertThat("status", batchEntry.getStatus(), is(BatchEntry.Status.PENDING));
         assertThat("isContinued", batchEntry.getContinued(), is(false));
         assertThat("diagnostics", batchEntry.getDiagnostics().isEmpty(), is(true));
+        assertThat("priority", batchEntry.getPriority(), is(4));
     }
 
     /**

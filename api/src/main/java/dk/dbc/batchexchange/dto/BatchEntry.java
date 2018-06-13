@@ -89,6 +89,8 @@ public class BatchEntry {
     @Convert(converter = BatchEntryDiagnosticsConverter.class)
     private List<Diagnostic> diagnostics;
 
+    private int priority;
+
     public BatchEntry() {}
 
     public BatchEntry(int id, Timestamp timeOfCreation, int batch) {
@@ -177,9 +179,17 @@ public class BatchEntry {
         return this;
     }
 
-    @Override
+    public int getPriority() {
+        return priority;
+    }
+
+    public BatchEntry withPriority(int priority) {
+        this.priority = priority;
+        return this;
+    }
+
     public String toString() {
-        return "Entry{" +
+        return "BatchEntry{" +
                 "id=" + id +
                 ", status=" + status +
                 ", timeOfCreation=" + timeOfCreation +
@@ -190,6 +200,7 @@ public class BatchEntry {
                 ", content=" + Arrays.toString(content) +
                 ", metadata='" + metadata + '\'' +
                 ", diagnostics=" + diagnostics +
+                ", priority=" + priority +
                 '}';
     }
 }
