@@ -2,16 +2,16 @@ INSERT INTO batch(name) VALUES ('batch1');
 INSERT INTO batch(name) VALUES ('batch2');
 INSERT INTO batch(name) VALUES ('batch3');
 
-INSERT INTO entry(batch,trackingId,content,metadata) VALUES (1, 'batch1_1', 'data1_1', '{"id": "1_1"}');
-INSERT INTO entry(batch,trackingId,content,metadata) VALUES (1, 'batch1_2', 'data1_2', '{"id": "1_2"}');
-INSERT INTO entry(batch,trackingId,content,metadata) VALUES (1, 'batch1_3', 'data1_3', '{"id": "1_3"}');
-INSERT INTO entry(batch,trackingId,content,metadata) VALUES (1, 'batch1_4', 'data1_4', '{"id": "1_4"}');
-INSERT INTO entry(batch,trackingId,content,metadata) VALUES (1, 'batch1_5', 'data1_5', '{"id": "1_5"}');
-INSERT INTO entry(batch,trackingId,content,metadata) VALUES (1, 'batch1_6', 'data1_6', '{"id": "1_6"}');
-INSERT INTO entry(batch,trackingId,content,metadata) VALUES (1, 'batch1_7', 'data1_7', '{"id": "1_7"}');
-INSERT INTO entry(batch,trackingId,content,metadata) VALUES (1, 'batch1_8', 'data1_8', '{"id": "1_8"}');
-INSERT INTO entry(batch,trackingId,content,metadata) VALUES (1, 'batch1_9', 'data1_9', '{"id": "1_9"}');
-INSERT INTO entry(batch,trackingId,content,metadata) VALUES (1, 'batch1_10', 'data1_10', '{"id": "1_10"}');
+INSERT INTO entry(batch,trackingId,content,metadata,priority) VALUES (1, 'batch1_1', 'data1_1', '{"id": "1_1"}', 4);
+INSERT INTO entry(batch,trackingId,content,metadata,priority) VALUES (1, 'batch1_2', 'data1_2', '{"id": "1_2"}', 7);
+INSERT INTO entry(batch,trackingId,content,metadata,priority) VALUES (1, 'batch1_3', 'data1_3', '{"id": "1_3"}', 4);
+INSERT INTO entry(batch,trackingId,content,metadata,priority) VALUES (1, 'batch1_4', 'data1_4', '{"id": "1_4"}', 7);
+INSERT INTO entry(batch,trackingId,content,metadata,priority) VALUES (1, 'batch1_5', 'data1_5', '{"id": "1_5"}', 4);
+INSERT INTO entry(batch,trackingId,content,metadata,priority) VALUES (1, 'batch1_6', 'data1_6', '{"id": "1_6"}', 7);
+INSERT INTO entry(batch,trackingId,content,metadata,priority) VALUES (1, 'batch1_7', 'data1_7', '{"id": "1_7"}', 4);
+INSERT INTO entry(batch,trackingId,content,metadata,priority) VALUES (1, 'batch1_8', 'data1_8', '{"id": "1_8"}', 7);
+INSERT INTO entry(batch,trackingId,content,metadata,priority) VALUES (1, 'batch1_9', 'data1_9', '{"id": "1_9"}', 4);
+INSERT INTO entry(batch,trackingId,content,metadata,priority) VALUES (1, 'batch1_10', 'data1_10', '{"id": "1_10"}', 7);
 
 INSERT INTO entry(batch,trackingId,content,metadata) VALUES (2, 'batch2_1', 'data2_1', '{"id": "2_1"}');
 INSERT INTO entry(batch,trackingId,content,metadata) VALUES (2, 'batch2_2', 'data2_2', '{"id": "2_2"}');

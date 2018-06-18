@@ -43,7 +43,7 @@ public class BatchEntry {
     public static final String IMPLICIT_RESULT_SET_MAPPING = "BatchEntry.implicit";
     public static final String GET_BATCH_ENTRIES_QUERY = "SELECT * FROM get_batch_entries(?)";
     public static final String GET_BATCH_ENTRIES_QUERY_NAME = "get_batch_entries";
-    public static final String CLAIM_PENDING_ENTRIES_QUERY = "SELECT * FROM claim_pending_entries(?) ORDER BY id";
+    public static final String CLAIM_PENDING_ENTRIES_QUERY = "SELECT * FROM claim_pending_entries(?) ORDER BY priority DESC, id ASC";
     public static final String CLAIM_PENDING_ENTRIES_QUERY_NAME = "claim_pending_entries";
     public static final String RESET_CLAIMED_ENTRIES_QUERY = "SELECT * FROM reset_claimed_entries()";
     public static final String RESET_CLAIMED_ENTRIES_QUERY_NAME = "reset_claimed_entries";
@@ -88,6 +88,8 @@ public class BatchEntry {
 
     @Convert(converter = BatchEntryDiagnosticsConverter.class)
     private List<Diagnostic> diagnostics;
+
+    private int priority;
 
     public BatchEntry() {}
 
@@ -177,9 +179,17 @@ public class BatchEntry {
         return this;
     }
 
-    @Override
+    public int getPriority() {
+        return priority;
+    }
+
+    public BatchEntry withPriority(int priority) {
+        this.priority = priority;
+        return this;
+    }
+
     public String toString() {
-        return "Entry{" +
+        return "BatchEntry{" +
                 "id=" + id +
                 ", status=" + status +
                 ", timeOfCreation=" + timeOfCreation +
@@ -190,6 +200,7 @@ public class BatchEntry {
                 ", content=" + Arrays.toString(content) +
                 ", metadata='" + metadata + '\'' +
                 ", diagnostics=" + diagnostics +
+                ", priority=" + priority +
                 '}';
     }
 }

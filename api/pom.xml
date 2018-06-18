@@ -13,7 +13,7 @@
   <parent>
     <artifactId>batch-exchange</artifactId>
     <groupId>dk.dbc</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>batch-exchange-api</artifactId>
