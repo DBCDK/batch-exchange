@@ -32,11 +32,12 @@ public class BatchExchangeDatabaseMigrator {
 
     @PostConstruct
     public void migrate() {
-        final Flyway flyway = new Flyway();
-        flyway.setTable("schema_version");
-        flyway.setBaselineOnMigrate(true);
-        flyway.setDataSource(dataSource);
-        flyway.setLocations("classpath:dk.dbc.batchexchange.db.migration");
+        final Flyway flyway = Flyway.configure()
+                .table("schema_version")
+                .baselineOnMigrate(true)
+                .dataSource(dataSource)
+                .locations("classpath:dk.dbc.batchexchange.db.migration")
+                .load();
         for (MigrationInfo info : flyway.info().all()) {
             LOGGER.info("database migration {} : {} from file '{}'",
                     info.getVersion(), info.getDescription(), info.getScript());
