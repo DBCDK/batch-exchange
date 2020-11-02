@@ -36,7 +36,7 @@ public class BatchExchangeDatabaseMigrator {
                 .table("schema_version")
                 .baselineOnMigrate(true)
                 .dataSource(dataSource)
-                .locations("classpath:dk.dbc.batchexchange.db.migration")
+                .locations("classpath:dk/dbc/batchexchange/db/migration")
                 .load();
         for (MigrationInfo info : flyway.info().all()) {
             LOGGER.info("database migration {} : {} from file '{}'",
