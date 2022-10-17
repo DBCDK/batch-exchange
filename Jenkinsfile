@@ -28,7 +28,7 @@ pipeline {
 
 		stage("verify") {
 			steps {
-				sh "mvn verify pmd:pmd javadoc:aggregate"
+				sh "mvn -B verify pmd:pmd javadoc:aggregate"
 
 				script {
 					def java = scanForIssues tool: [$class: 'Java']
