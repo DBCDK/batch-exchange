@@ -1,4 +1,7 @@
 #!groovy
+@Library('metascrum')
+import dk.dbc.metascrum.jenkins.Maven
+// Defined in https://github.com/DBCDK/metascrum-pipeline-library/blob/master/src/dk/dbc/metascrum/jenkins/Maven.groovy
 
 def workerNode = "devel11"
 
@@ -11,6 +14,7 @@ pipeline {
 
     environment {
 		GITLAB_PRIVATE_TOKEN = credentials("metascrum-gitlab-api-token")
+		MAVEN_OPTS="-Dmaven.repo.local=\$WORKSPACE/.repo"
 	}
 
 	options {
@@ -28,15 +32,8 @@ pipeline {
 
 		stage("verify") {
 			steps {
-				sh "mvn -B verify pmd:pmd javadoc:aggregate"
-
 				script {
-					def java = scanForIssues tool: [$class: 'Java']
-					def javadoc = scanForIssues tool: [$class: 'JavaDoc']
-					publishIssues issues: [java, javadoc]
-
-					def pmd = scanForIssues tool: [$class: 'Pmd'], pattern: '**/target/pmd.xml'
-					publishIssues issues: [pmd]
+					Maven.verify(this)
 				}
 			}
 		}
@@ -46,7 +43,9 @@ pipeline {
                 branch "master"
             }
 			steps {
-				sh "mvn -Dmaven.test.skip=true jar:jar deploy:deploy"
+				script {
+					Maven.deploy(this)
+				}
 			}
 		}
     }

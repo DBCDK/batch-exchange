@@ -22,17 +22,6 @@
   <packaging>pom</packaging>
   <name>batch-exchange</name>
 
-  <ciManagement>
-    <url>http://is.dbc.dk/job/batch-exchange</url>
-  </ciManagement>
-
-  <scm>
-    <connection>scm:svn:https://svn.dbc.dk/repos/batch-exchange/trunk</connection>
-    <developerConnection>scm:svn:https://svn.dbc.dk/repos/batch-exchange/trunk</developerConnection>
-    <tag>HEAD</tag>
-    <url>http://svn.dbc.dk/websvn/</url>
-  </scm>
-
   <pluginRepositories>
     <pluginRepository>
       <id>mavenrepo.dbc.dk</id>
