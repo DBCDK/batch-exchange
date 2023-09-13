@@ -5,8 +5,8 @@
 
 package dk.dbc.batchexchange.dto;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 @Converter
 public class BatchStatusConverter implements AttributeConverter<Batch.Status, Object> {

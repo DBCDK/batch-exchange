@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright Dansk Bibliotekscenter a/s. Licensed under GNU 3
-  ~ See license text in LICENSE.txt
-  -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -13,17 +8,20 @@
   <parent>
     <artifactId>batch-exchange</artifactId>
     <groupId>dk.dbc</groupId>
-    <version>1.1-SNAPSHOT</version>
+    <version>2.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>batch-exchange-api</artifactId>
   <name>batch-exchange-api</name>
 
+  <properties>
+    <eclipselink.version>4.0.2</eclipselink.version>
+  </properties>
+
   <dependencies>
     <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
-      <scope>provided</scope>
+      <groupId>jakarta.platform</groupId>
+      <artifactId>jakarta.jakartaee-web-api</artifactId>
     </dependency>
     <dependency>
       <groupId>dk.dbc</groupId>

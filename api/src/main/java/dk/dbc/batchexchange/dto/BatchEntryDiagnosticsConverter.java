@@ -5,10 +5,10 @@
 
 package dk.dbc.batchexchange.dto;
 
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import org.postgresql.util.PGobject;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
 import java.util.List;
 
 @Converter
