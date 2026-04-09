@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright Dansk Bibliotekscenter a/s. Licensed under GNU 3
-  ~ See license text in LICENSE.txt
-  -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -13,20 +8,13 @@
   <parent>
     <groupId>dk.dbc</groupId>
     <artifactId>super-pom</artifactId>
-    <version>java11-SNAPSHOT</version>
+    <version>java21-SNAPSHOT</version>
     <relativePath/>
   </parent>
 
   <artifactId>batch-exchange</artifactId>
-  <version>2.0-SNAPSHOT</version>
+  <version>21.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-
-  <dependencies>
-    <dependency>
-      <groupId>jakarta.platform</groupId>
-      <artifactId>jakarta.jakartaee-api</artifactId>
-    </dependency>
-  </dependencies>
 
   <pluginRepositories>
     <pluginRepository>
@@ -42,39 +30,36 @@
     </repository>
   </repositories>
 
+  <properties>
+    <sonar.projectKey>${project.artifactId}</sonar.projectKey>
+    <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+  </properties>
+
   <modules>
     <module>api</module>
   </modules>
+  
+  <dependencies>
+    <dependency>
+      <groupId>jakarta.platform</groupId>
+      <artifactId>jakarta.jakartaee-api</artifactId>
+    </dependency>
+  </dependencies>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>dk.dbc</groupId>
-        <artifactId>dbc-commons-jdbc-util</artifactId>
-        <version>1.3-SNAPSHOT</version>
+        <artifactId>dbc-commons-testcontainers-postgres-17</artifactId>
+        <version>21.3.0-SNAPSHOT</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>dk.dbc</groupId>
         <artifactId>dbc-commons-testutil-assert</artifactId>
         <version>1.3-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>org.flywaydb</groupId>
-        <artifactId>flyway-core</artifactId>
-        <version>7.0.4</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>dk.dbc</groupId>
-          <artifactId>postgresql-maven-plugin</artifactId>
-          <version>1.3-SNAPSHOT</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
 </project>

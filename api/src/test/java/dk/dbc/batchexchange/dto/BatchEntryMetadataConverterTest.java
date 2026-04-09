@@ -1,8 +1,3 @@
-/*
- * Copyright Dansk Bibliotekscenter a/s. Licensed under GNU 3
- * See license text in LICENSE.txt
- */
-
 package dk.dbc.batchexchange.dto;
 
 import org.junit.Test;
@@ -13,7 +8,7 @@ import java.sql.SQLException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class BatchEntryMetadataConverterTest {
     private final BatchEntryMetadataConverter converter = new BatchEntryMetadataConverter();

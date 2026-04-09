@@ -1,8 +1,3 @@
-/*
- * Copyright Dansk Bibliotekscenter a/s. Licensed under GNU 3
- * See license text in LICENSE.txt
- */
-
 package dk.dbc.batchexchange;
 
 import dk.dbc.batchexchange.dto.Batch;
@@ -17,6 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.postgresql.ds.PGSimpleDataSource;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -36,7 +32,7 @@ import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_USER
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class BatchExchangeOrmIT extends IntegrationTest {
     private static Map<String, String> entityManagerProperties = new HashMap<>();
@@ -45,6 +41,7 @@ public class BatchExchangeOrmIT extends IntegrationTest {
 
     @BeforeClass
     public static void createEntityManagerFactory() {
+        final PGSimpleDataSource datasource = (PGSimpleDataSource) dbcPostgreSQLContainer.datasource();
         entityManagerProperties.put(JDBC_USER, datasource.getUser());
         entityManagerProperties.put(JDBC_PASSWORD, datasource.getPassword());
         entityManagerProperties.put(JDBC_URL, datasource.getUrl());

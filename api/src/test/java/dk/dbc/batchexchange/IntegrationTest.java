@@ -1,43 +1,42 @@
-/*
- * Copyright Dansk Bibliotekscenter a/s. Licensed under GNU 3
- * See license text in LICENSE.txt
- */
-
 package dk.dbc.batchexchange;
 
-import dk.dbc.commons.jdbc.util.JDBCUtil;
+import dk.dbc.commons.testcontainers.postgres.DBCPostgreSQLContainer;
 import org.junit.After;
 import org.junit.BeforeClass;
-import org.postgresql.ds.PGSimpleDataSource;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class IntegrationTest {
-    protected static final PGSimpleDataSource datasource;
+    public static final DBCPostgreSQLContainer dbcPostgreSQLContainer = makePostgresContainer();
 
-    static {
-        datasource = new PGSimpleDataSource();
-        datasource.setDatabaseName("batch_exchange");
-        datasource.setServerName("localhost");
-        datasource.setPortNumber(Integer.parseInt(System.getProperty("postgresql.port", "5432")));
-        datasource.setUser(System.getProperty("user.name"));
-        datasource.setPassword(System.getProperty("user.name"));
+    private static DBCPostgreSQLContainer makePostgresContainer() {
+        final DBCPostgreSQLContainer postgreSQLContainer = new DBCPostgreSQLContainer();
+        postgreSQLContainer.start();
+        postgreSQLContainer.exposeHostPort();
+        return postgreSQLContainer;
     }
 
     @BeforeClass
-    public static void migrateDatabase() throws Exception {
-        final BatchExchangeDatabaseMigrator dbMigrator = new BatchExchangeDatabaseMigrator(datasource);
+    public static void migrateDatabase() {
+        final BatchExchangeDatabaseMigrator dbMigrator = new BatchExchangeDatabaseMigrator(
+                dbcPostgreSQLContainer.datasource());
         dbMigrator.migrate();
     }
 
     @After
     public void resetDatabase() throws SQLException {
-        try (Connection conn = datasource.getConnection();
+        try (Connection conn = dbcPostgreSQLContainer.createConnection();
              Statement statement = conn.createStatement()) {
             statement.executeUpdate("DELETE FROM entry");
             statement.executeUpdate("DELETE FROM batch");
@@ -46,26 +45,56 @@ public class IntegrationTest {
         }
     }
 
-    protected static void executeScript(File scriptFile) {
-        try (Connection conn = datasource.getConnection()) {
-            JDBCUtil.executeScript(conn, scriptFile, StandardCharsets.UTF_8.name());
-        } catch (SQLException | IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     protected int getNumberOfActiveBatchEntries() {
-        try (Connection conn = datasource.getConnection()) {
-            return JDBCUtil.getFirstInt(conn, "SELECT count(id) FROM entry WHERE status = 'ACTIVE'");
+        int result = -1;
+        try (Connection conn = dbcPostgreSQLContainer.createConnection();
+             PreparedStatement pstmt = conn.prepareStatement(
+                     "SELECT count(id) FROM entry WHERE status = 'ACTIVE'")) {
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                result = rs.getInt(1);
+            }
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
+
+        return result;
     }
 
     protected int getNumberOfPendingBatchEntries() {
-        try (Connection conn = datasource.getConnection()) {
-            return JDBCUtil.getFirstInt(conn, "SELECT count(id) FROM entry WHERE status = 'PENDING'");
+        int result = -1;
+        try (Connection conn = dbcPostgreSQLContainer.createConnection();
+             PreparedStatement pstmt = conn.prepareStatement(
+                     "SELECT count(id) FROM entry WHERE status = 'PENDING'")) {
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                result = rs.getInt(1);
+            }
         } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
+
+        return result;
+    }
+
+    public static void executeScript(File script) {
+        try (Connection conn = dbcPostgreSQLContainer.createConnection();
+             FileInputStream fstream = new FileInputStream(script);
+             BufferedReader reader = new BufferedReader(
+                     new InputStreamReader(new DataInputStream(fstream), StandardCharsets.UTF_8))) {
+
+            final StringBuilder scriptLines = new StringBuilder();
+
+            // Read file line by line, and append to StringBuilder
+            String line;
+            while ((line = reader.readLine()) != null) {
+                scriptLines.append(line);
+                scriptLines.append("\n");
+            }
+            conn.prepareStatement(scriptLines.toString()).executeUpdate();
+        } catch (SQLException | IOException e) {
             throw new IllegalStateException(e);
         }
     }
