@@ -1,16 +1,11 @@
-/*
- * Copyright Dansk Bibliotekscenter a/s. Licensed under GNU 3
- * See license text in LICENSE.txt
- */
-
 package dk.dbc.batchexchange;
 
 import dk.dbc.batchexchange.dto.BatchEntry;
 import dk.dbc.batchexchange.dto.BatchEntryDiagnosticsConversion;
 import dk.dbc.batchexchange.dto.BatchEntryStatusConversion;
 import dk.dbc.batchexchange.dto.Diagnostic;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.postgresql.util.PGobject;
 
 import java.io.File;
@@ -24,12 +19,12 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class BatchExchangeIT extends IntegrationTest {
     private final BatchExchange batchExchange = new BatchExchange();
 
-    @Before
+    @BeforeEach
     public void populateDatabase() throws URISyntaxException {
         final URL resource = BatchExchangeIT.class.getResource("/populate.sql");
         executeScript(new File(resource.toURI()));
@@ -47,7 +42,7 @@ public class BatchExchangeIT extends IntegrationTest {
     @Test
     public void claimingBatchEntries() throws SQLException {
         List<BatchEntry> entries;
-        try (Connection conn = datasource.getConnection()) {
+        try (Connection conn = dbcPostgreSQLContainer.createConnection()) {
             entries = batchExchange.claimBatchEntries(conn, 10);
         }
         assertThat("number of claimed batch entries", entries.size(), is(10));
@@ -74,7 +69,7 @@ public class BatchExchangeIT extends IntegrationTest {
 
         assertThat("number of batch entries marked as ACTIVE", getNumberOfActiveBatchEntries(), is(10));
 
-        try (Connection conn = datasource.getConnection()) {
+        try (Connection conn = dbcPostgreSQLContainer.createConnection()) {
             assertThat("number of reset batch entries", batchExchange.resetClaimedBatchEntries(conn), is(10));
         }
         assertThat("number of batch entries marked as ACTIVE after reset", getNumberOfActiveBatchEntries(), is(0));
@@ -89,12 +84,12 @@ public class BatchExchangeIT extends IntegrationTest {
     @Test
     public void claimingPendingBatchEntries_whenNoneExist() throws SQLException {
         // First claim every batch entry
-        try (Connection conn = datasource.getConnection()) {
+        try (Connection conn = dbcPostgreSQLContainer.createConnection()) {
             batchExchange.claimBatchEntries(conn, 1000);
         }
 
         // Then try to claim some more
-        try (Connection conn = datasource.getConnection()) {
+        try (Connection conn = dbcPostgreSQLContainer.createConnection()) {
             List<BatchEntry> entries = batchExchange.claimBatchEntries(conn, 10);
             assertThat("number of claimed batch entries", entries.size(), is(0));
         }
@@ -115,11 +110,11 @@ public class BatchExchangeIT extends IntegrationTest {
                 .withStatus(BatchEntry.Status.OK)
                 .withDiagnostics(Collections.singletonList(Diagnostic.createError("I failed")));
 
-        try (Connection conn = datasource.getConnection()) {
+        try (Connection conn = dbcPostgreSQLContainer.createConnection()) {
             assertThat(batchExchange.updateBatchEntry(conn, entry), is(true));
         }
 
-        try (Connection conn = datasource.getConnection();
+        try (Connection conn = dbcPostgreSQLContainer.createConnection();
              PreparedStatement lookup = conn.prepareStatement("SELECT status, diagnostics FROM entry WHERE id = ?")) {
             lookup.setInt(1, entry.getId());
             final ResultSet rs = lookup.executeQuery();
@@ -138,7 +133,7 @@ public class BatchExchangeIT extends IntegrationTest {
     public void updateBatchEntry_whenBatchEntryDoesNotExist_returnsFalse() throws SQLException {
         final BatchEntry entry = new BatchEntry(42000, null, 1)
                 .withStatus(BatchEntry.Status.OK);
-        try (Connection conn = datasource.getConnection()) {
+        try (Connection conn = dbcPostgreSQLContainer.createConnection()) {
             assertThat(batchExchange.updateBatchEntry(conn, entry), is(false));
         }
     }

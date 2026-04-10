@@ -1,8 +1,3 @@
-/*
- * Copyright Dansk Bibliotekscenter a/s. Licensed under GNU 3
- * See license text in LICENSE.txt
- */
-
 package dk.dbc.batchexchange;
 
 import dk.dbc.batchexchange.dto.Batch;
@@ -13,58 +8,45 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.RollbackException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static dk.dbc.commons.testutil.Assert.assertThat;
-import static dk.dbc.commons.testutil.Assert.isThrowing;
-import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_DRIVER;
-import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_PASSWORD;
-import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_URL;
-import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_USER;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BatchExchangeOrmIT extends IntegrationTest {
-    private static Map<String, String> entityManagerProperties = new HashMap<>();
     private static EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
 
-    @BeforeClass
+    @BeforeAll
     public static void createEntityManagerFactory() {
-        entityManagerProperties.put(JDBC_USER, datasource.getUser());
-        entityManagerProperties.put(JDBC_PASSWORD, datasource.getPassword());
-        entityManagerProperties.put(JDBC_URL, datasource.getUrl());
-        entityManagerProperties.put(JDBC_DRIVER, "org.postgresql.Driver");
-        entityManagerProperties.put("eclipselink.logging.level", "FINE");
-        entityManagerFactory = Persistence.createEntityManagerFactory("BatchExchangeIT_PU", entityManagerProperties);
+        entityManagerFactory = Persistence.createEntityManagerFactory("BatchExchangeIT_PU", dbcPostgreSQLContainer.entityManagerProperties());
     }
 
-    @Before
+    @BeforeEach
     public void populateDatabase() throws URISyntaxException {
         final URL resource = BatchExchangeOrmIT.class.getResource("/populate.sql");
         executeScript(new File(resource.toURI()));
     }
 
-    @Before
+    @BeforeEach
     public void createEntityManager() {
-        entityManager = entityManagerFactory.createEntityManager(entityManagerProperties);
+        entityManager = entityManagerFactory.createEntityManager();
     }
 
-    @After
+    @AfterEach
     public void clearEntityManagerCache() {
         entityManager.clear();
         entityManager.getEntityManagerFactory().getCache().evictAll();
@@ -336,8 +318,8 @@ public class BatchExchangeOrmIT extends IntegrationTest {
     public void batchEntryCanNotBeUpdatedWhenInCompletedStatus() {
         final BatchEntry batchEntry = entityManager.find(BatchEntry.class, 1);
         transaction_scoped(() -> batchEntry.withStatus(BatchEntry.Status.OK));
-        assertThat(() -> transaction_scoped(() -> batchEntry.withStatus(BatchEntry.Status.ACTIVE)),
-                isThrowing(RollbackException.class));
+        assertThrows(RollbackException.class,
+                () -> transaction_scoped(() -> batchEntry.withStatus(BatchEntry.Status.ACTIVE)));
     }
 
     private <T> T transaction_scoped(CodeBlockExecution<T> codeBlock) {
