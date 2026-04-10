@@ -12,21 +12,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.postgresql.ds.PGSimpleDataSource;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_DRIVER;
-import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_PASSWORD;
-import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_URL;
-import static org.eclipse.persistence.config.PersistenceUnitProperties.JDBC_USER;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -34,19 +27,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BatchExchangeOrmIT extends IntegrationTest {
-    private static Map<String, String> entityManagerProperties = new HashMap<>();
     private static EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
 
     @BeforeAll
     public static void createEntityManagerFactory() {
-        final PGSimpleDataSource datasource = (PGSimpleDataSource) dbcPostgreSQLContainer.datasource();
-        entityManagerProperties.put(JDBC_USER, datasource.getUser());
-        entityManagerProperties.put(JDBC_PASSWORD, datasource.getPassword());
-        entityManagerProperties.put(JDBC_URL, datasource.getUrl());
-        entityManagerProperties.put(JDBC_DRIVER, "org.postgresql.Driver");
-        entityManagerProperties.put("eclipselink.logging.level", "FINE");
-        entityManagerFactory = Persistence.createEntityManagerFactory("BatchExchangeIT_PU", entityManagerProperties);
+        entityManagerFactory = Persistence.createEntityManagerFactory("BatchExchangeIT_PU", dbcPostgreSQLContainer.entityManagerProperties());
     }
 
     @BeforeEach
@@ -57,7 +43,7 @@ public class BatchExchangeOrmIT extends IntegrationTest {
 
     @BeforeEach
     public void createEntityManager() {
-        entityManager = entityManagerFactory.createEntityManager(entityManagerProperties);
+        entityManager = entityManagerFactory.createEntityManager();
     }
 
     @AfterEach
