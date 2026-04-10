@@ -1,8 +1,8 @@
 package dk.dbc.batchexchange;
 
 import dk.dbc.commons.testcontainers.postgres.DBCPostgreSQLContainer;
-import org.junit.After;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -27,14 +27,14 @@ public class IntegrationTest {
         return postgreSQLContainer;
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void migrateDatabase() {
         final BatchExchangeDatabaseMigrator dbMigrator = new BatchExchangeDatabaseMigrator(
                 dbcPostgreSQLContainer.datasource());
         dbMigrator.migrate();
     }
 
-    @After
+    @AfterEach
     public void resetDatabase() throws SQLException {
         try (Connection conn = dbcPostgreSQLContainer.createConnection();
              Statement statement = conn.createStatement()) {

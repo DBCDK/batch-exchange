@@ -1,6 +1,6 @@
 package dk.dbc.batchexchange.dto;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.postgresql.util.PGobject;
 
 import java.sql.SQLException;

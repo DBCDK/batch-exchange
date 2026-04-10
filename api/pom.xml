@@ -30,15 +30,7 @@
       <groupId>dk.dbc</groupId>
       <artifactId>dbc-commons-testcontainers-postgres-17</artifactId>
     </dependency>
-    <dependency>
-      <groupId>dk.dbc</groupId>
-      <artifactId>dbc-commons-testutil-assert</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
+<dependency>
       <groupId>org.eclipse.persistence</groupId>
       <artifactId>eclipselink</artifactId>
       <scope>test</scope>
@@ -50,6 +42,14 @@
     <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-database-postgresql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>

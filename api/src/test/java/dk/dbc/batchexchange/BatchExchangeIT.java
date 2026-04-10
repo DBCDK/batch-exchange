@@ -4,8 +4,8 @@ import dk.dbc.batchexchange.dto.BatchEntry;
 import dk.dbc.batchexchange.dto.BatchEntryDiagnosticsConversion;
 import dk.dbc.batchexchange.dto.BatchEntryStatusConversion;
 import dk.dbc.batchexchange.dto.Diagnostic;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.postgresql.util.PGobject;
 
 import java.io.File;
@@ -24,7 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class BatchExchangeIT extends IntegrationTest {
     private final BatchExchange batchExchange = new BatchExchange();
 
-    @Before
+    @BeforeEach
     public void populateDatabase() throws URISyntaxException {
         final URL resource = BatchExchangeIT.class.getResource("/populate.sql");
         executeScript(new File(resource.toURI()));

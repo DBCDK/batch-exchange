@@ -1,14 +1,13 @@
 package dk.dbc.batchexchange.dto;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.postgresql.util.PGobject;
 
-import static dk.dbc.commons.testutil.Assert.assertThat;
-import static dk.dbc.commons.testutil.Assert.isThrowing;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BatchEntryStatusConverterTest {
     private final BatchEntryStatusConverter converter = new BatchEntryStatusConverter();
@@ -31,7 +30,7 @@ public class BatchEntryStatusConverterTest {
 
     @Test
     public void toEntityAttribute_dbValueArgIsNull_throws() {
-        assertThat(() -> converter.convertToEntityAttribute(null), isThrowing(IllegalArgumentException.class));
+        assertThrows(IllegalArgumentException.class, () -> converter.convertToEntityAttribute(null));
     }
 
     @Test
